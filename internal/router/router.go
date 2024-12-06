@@ -3,8 +3,10 @@ package router
 import (
 	"net/http"
 
+	_ "github.com/senyabanana/library-service/docs"
 	"github.com/senyabanana/library-service/internal/handlers"
 	"github.com/senyabanana/library-service/internal/logger"
+	"github.com/swaggo/http-swagger"
 )
 
 func SetupRoutes(handler *handlers.SongHandler, logg *logger.Logger) http.Handler {
@@ -12,7 +14,7 @@ func SetupRoutes(handler *handlers.SongHandler, logg *logger.Logger) http.Handle
 
 	mux.HandleFunc("/songs", func(w http.ResponseWriter, r *http.Request) {
 		logg.WithField("method", r.Method).Debug("Request received")
-		
+
 		switch r.Method {
 		case http.MethodGet:
 			handler.GetSongs(w, r)
@@ -35,6 +37,8 @@ func SetupRoutes(handler *handlers.SongHandler, logg *logger.Logger) http.Handle
 			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		}
 	})
+
+	mux.HandleFunc("/swagger/", httpSwagger.WrapHandler)
 
 	return mux
 }

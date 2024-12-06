@@ -25,6 +25,16 @@ func NewSongHandler(service services.SongServiceInterface, logg *logger.Logger) 
 	}
 }
 
+// @Summary Добавить новую песню
+// @Description Добавляет новую песню в библиотеку и обогащает её данными из внешнего API
+// @Tags Песни
+// @Accept json
+// @Produce json
+// @Param song body entities.Song true "Данные о песне"
+// @Success 201 {string} string "Песня успешно добавлена"
+// @Failure 400 {string} string "Неверные входные данные"
+// @Failure 500 {string} string "Ошибка сервера"
+// @Router /songs [post]
 func (h *SongHandler) AddSong(w http.ResponseWriter, r *http.Request) {
 	h.logg.WithField("method", r.Method).Debug("Handling AddSong request")
 
@@ -49,6 +59,17 @@ func (h *SongHandler) AddSong(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// @Summary Получить список песен
+// @Description Возвращает список песен с поддержкой фильтрации и пагинации
+// @Tags Песни
+// @Produce json
+// @Param group query string false "Название группы"
+// @Param song query string false "Название песни"
+// @Param page query int false "Номер страницы"
+// @Param per_page query int false "Количество элементов на странице"
+// @Success 200 {array} entities.Song
+// @Failure 500 {string} string "Ошибка сервера"
+// @Router /songs [get]
 func (h *SongHandler) GetSongs(w http.ResponseWriter, r *http.Request) {
 	h.logg.WithField("method", r.Method).Debug("Handling GetSongs request")
 
@@ -87,6 +108,17 @@ func (h *SongHandler) GetSongs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(songs)
 }
 
+// @Summary Обновить информацию о песне
+// @Description Обновляет информацию о существующей песне по ID
+// @Tags Песни
+// @Accept json
+// @Produce json
+// @Param id path int true "ID песни"
+// @Param song body entities.Song true "Обновлённые данные о песне"
+// @Success 200 {string} string "Песня успешно обновлена"
+// @Failure 400 {string} string "Неверные данные"
+// @Failure 500 {string} string "Ошибка сервера"
+// @Router /songs/{id} [put]
 func (h *SongHandler) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	h.logg.WithField("method", r.Method).Debug("Handling UpdateSong request")
 
@@ -116,6 +148,14 @@ func (h *SongHandler) UpdateSong(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// @Summary Удалить песню
+// @Description Удаляет песню по ID
+// @Tags Песни
+// @Param id path int true "ID песни"
+// @Success 204 {string} string "Песня успешно удалена"
+// @Failure 400 {string} string "Неверный ID"
+// @Failure 500 {string} string "Ошибка сервера"
+// @Router /songs/{id} [delete]
 func (h *SongHandler) DeleteSong(w http.ResponseWriter, r *http.Request) {
 	h.logg.WithField("method", r.Method).Debug("Handling DeleteSong request")
 

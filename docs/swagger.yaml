@@ -1,0 +1,145 @@
+definitions:
+  entities.Song:
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      release_date:
+        type: string
+      song:
+        type: string
+      text:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /songs:
+    get:
+      description: Возвращает список песен с поддержкой фильтрации и пагинации
+      parameters:
+      - description: Название группы
+        in: query
+        name: group
+        type: string
+      - description: Название песни
+        in: query
+        name: song
+        type: string
+      - description: Номер страницы
+        in: query
+        name: page
+        type: integer
+      - description: Количество элементов на странице
+        in: query
+        name: per_page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.Song'
+            type: array
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Получить список песен
+      tags:
+      - Песни
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новую песню в библиотеку и обогащает её данными из внешнего
+        API
+      parameters:
+      - description: Данные о песне
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Песня успешно добавлена
+          schema:
+            type: string
+        "400":
+          description: Неверные входные данные
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Добавить новую песню
+      tags:
+      - Песни
+  /songs/{id}:
+    delete:
+      description: Удаляет песню по ID
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Песня успешно удалена
+          schema:
+            type: string
+        "400":
+          description: Неверный ID
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Удалить песню
+      tags:
+      - Песни
+    put:
+      consumes:
+      - application/json
+      description: Обновляет информацию о существующей песне по ID
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновлённые данные о песне
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/entities.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Песня успешно обновлена
+          schema:
+            type: string
+        "400":
+          description: Неверные данные
+          schema:
+            type: string
+        "500":
+          description: Ошибка сервера
+          schema:
+            type: string
+      summary: Обновить информацию о песне
+      tags:
+      - Песни
+swagger: "2.0"
