@@ -20,7 +20,7 @@ services:
 
   db:
     image: postgres:17
-    container_name: postgres
+    container_name: db
     restart: always
     environment:
       POSTGRES_USER: postgres
